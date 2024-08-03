@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+</head>
+<body>
+    <h1>Admin Dashboard</h1>
+    <h2>List of Cars</h2>
+    <ul id="car-list"></ul>
+    <h2>Basic Statistics</h2>
+    <p id="total-cars"></p>
+
+    <script>
+        async function fetchCars() {
+            const token = localStorage.getItem('token');
+            const response = await fetch('/admin/get-cars', {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            const cars = await response.json();
+            const carList = document.getElementById('car-list');
+            carList.innerHTML = '';
+            cars.forEach(car => {
+                const li = document.createElement('li');
+                li.textContent = `${car.carName} - ${car.manufacturingYear} - $${car.price}`;
+                carList.appendChild(li);
+            });
+        }
+
+        async function fetchStatistics() {
+            const token = localStorage.getItem('token');
+            const response = await fetch('/admin/dashboard', {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            const stats = await response.json();
+            document.getElementById('total-cars').textContent = `Total cars: ${stats.totalCars}`;
+        }
+
+        fetchCars();
+        fetchStatistics();
+    </script>
+</body>
+</html>

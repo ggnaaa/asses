@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Cars</title>
+</head>
+<body>
+    <h1>List of Cars</h1>
+    <ul id="car-list"></ul>
+
+    <script>
+        async function fetchCars() {
+            console.log('hi')
+            var cars=[]
+            // const token = localStorage.getItem('token');
+            const response = await fetch('/api/get-cars'
+            // {
+                // headers: { 'Authorization': `Bearer ${token}` }
+            // }
+            ).then((data)=>data.json())
+            .then((data)=>{console.log(data);
+            cars=data;
+        });
+            // const cars = await response.json();
+            const carList = document.getElementById('car-list');
+            carList.innerHTML = '';
+            cars.forEach(car => {
+                const li = document.createElement('li');
+                li.textContent = `${car.carName} - ${car.manufacturingYear} - $${car.price}`;
+                carList.appendChild(li);
+            });
+        }
+
+        fetchCars();
+    </script>
+</body>
+</html>

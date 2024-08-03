@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+</head>
+<body>
+    <h1>Assignment for Quadiro Technologies</h1>
+    <form id="admin-login-form">
+        <h2>Admin Login</h2>
+        <label for="admin-username">Username:</label>
+        <input type="text" id="admin-username" name="username" required>
+        <label for="admin-password">Password:</label>
+        <input type="password" id="admin-password" name="password" required>
+        <button type="submit">Login as Admin</button>
+    </form>
+    <form id="user-login-form">
+        <h2>User Login</h2>
+        <label for="user-username">Username:</label>
+        <input type="text" id="user-username" name="username" required>
+        <label for="user-password">Password:</label>
+        <input type="password" id="user-password" name="password" required>
+        <button type="submit">Login as User</button>
+    </form>
+
+    <script>
+        document.getElementById('admin-login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const username = document.getElementById('admin-username').value;
+            const password = document.getElementById('admin-password').value;
+
+            const response = await fetch('/auth/admin-login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password })
+            });
+
+            const data = await response.json();
+            if (response.ok) {
+                alert('Admin logged in successfully');
+                // Save the token and redirect to the admin dashboard
+                localStorage.setItem('token', data.token);
+                window.location.href = '/admin/dashboard';
+            } else {
+                alert('Login failed: ' + data.message);
+            }
+        });
+
+        document.getElementById('user-login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const username = document.getElementById('user-username').value;
+            const password = document.getElementById('user-password').value;
+
+            const response = await fetch('/user-login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password })
+            });
+
+            const data = await response.json();
+            if (response.ok) {
+                alert('User logged in successfully');
+                // Save the token and redirect to the user page
+                localStorage.setItem('token', data.token);
+                window.location.href = '/user/cars';
+            } else {
+                alert('Login failed: ' + data.message);
+            }
+        });
+    </script>
+</body>
+</html>
